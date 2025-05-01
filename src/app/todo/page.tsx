@@ -1,7 +1,8 @@
 export default function Page() {
+  // TODO: Once the events are imported, allow the user to check/uncheck them here
   return (
     <div className="flex w-full h-[480px] md:h-[600px] lg:h-[800px] px-4 items-center justify-center">
-      Home Page!
+      <h1 className="text-2xl font-bold">Todo</h1>
     </div>
   );
 }
