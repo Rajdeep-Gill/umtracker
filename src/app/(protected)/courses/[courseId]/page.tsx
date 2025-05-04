@@ -3,8 +3,16 @@ interface Props {
     courseId: string;
   }>;
 }
+import { getUser } from "@/hooks/get-user";
+import { redirect } from "next/navigation";
 
 export default async function Page({ params }: Props) {
+  const data = await getUser();
+
+  if (!data) {
+    redirect("/sign-in");
+  }
+
   const { courseId } = await params;
 
   return (

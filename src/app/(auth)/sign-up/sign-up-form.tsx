@@ -65,7 +65,6 @@ export const SignUpForm = () => {
         onError: (ctx) => {
           setIsLoading(false);
           // display the error message
-          alert(ctx.error.message);
           toast(
             "Error creating account. Please try again." + ctx.error.message
           );
