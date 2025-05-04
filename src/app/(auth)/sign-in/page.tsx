@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { SignInForm } from "./sign-in-form";
 
-export default function SignUpPage() {
+export default function SignInPage() {
   return (
     <div className="flex flex-col items-center pt-24 min-h-screen py-8 px-4 bg-gray-50">
       <div className="w-full max-w-md space-y-6">

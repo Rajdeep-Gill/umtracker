@@ -20,11 +20,12 @@ import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email(),
-  password: z.string().min(5, "Password must be at least 5 characters long"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 export const SignUpForm = () => {
@@ -53,15 +54,21 @@ export const SignUpForm = () => {
         onRequest: (ctx) => {
           //show loading
           setIsLoading(true);
+          toast("Creating your account...");
         },
         onSuccess: (ctx) => {
           setIsLoading(false);
           // redirect to the sign in page
           router.push("/");
+          toast("Account created successfully! ");
         },
         onError: (ctx) => {
+          setIsLoading(false);
           // display the error message
           alert(ctx.error.message);
+          toast(
+            "Error creating account. Please try again." + ctx.error.message
+          );
         },
       }
     );
@@ -112,7 +119,7 @@ export const SignUpForm = () => {
                 <Input type="password" placeholder="Password" {...field} />
               </FormControl>
               <FormDescription>
-                The password you will use to log in. Must be at least 5
+                The password you will use to log in. Must be at least 8
                 characters long.
               </FormDescription>
               <FormMessage />

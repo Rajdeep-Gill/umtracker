@@ -17,6 +17,11 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { set } from "date-fns";
+import { useState } from "react";
+import { Loader2Icon } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -32,13 +37,39 @@ export const SignInForm = () => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { email, password } = values;
-    const { data, error } = await authClient.signIn.email({
-      email,
-      password,
-      callbackURL: "/",
-    });
+    const { data, error } = await authClient.signIn.email(
+      {
+        email,
+        password,
+        callbackURL: "/",
+      },
+      {
+        onRequest: (ctx) => {
+          set;
+          //show loading
+          toast("Logging into your account...");
+        },
+        onSuccess: (ctx) => {
+          // redirect to the sign in page
+          router.push("/");
+          toast("Account created successfully! ");
+        },
+        onError: (ctx) => {
+          setIsLoading(false);
+          // display the error message
+          alert(ctx.error.message);
+          toast(
+            "Error creating account. Please try again." + ctx.error.message
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -76,14 +107,20 @@ export const SignInForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Sign In
+        <Button disabled={isLoading} type="submit" className="w-full">
+          {isLoading ? (
+            <Loader2Icon className="w-4 h-4 animate-spin" />
+          ) : (
+            "Sign In"
+          )}
         </Button>
         <div className="flex items-center justify-center w-full text-sm gap-x-2">
           <p className="text-gray-600">Don't have an account?</p>
-          <Link href="/sign-up" className="hover:underline">
-            Sign Up
-          </Link>
+          <Button disabled={isLoading} variant="link" size="sm">
+            <Link href="/sign-up" className="hover:underline">
+              Sign Up
+            </Link>
+          </Button>
         </div>
       </form>
     </Form>
