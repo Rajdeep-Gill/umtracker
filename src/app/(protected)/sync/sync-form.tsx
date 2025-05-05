@@ -114,7 +114,7 @@ export const SyncForm = () => {
 
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-muted-foreground">
-          Don't know where to find the URL?
+          Don&abpos;t know where to find the URL?
         </h2>
         <Carousel className="w-full">
           <CarouselContent>
