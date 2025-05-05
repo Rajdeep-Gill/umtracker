@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";

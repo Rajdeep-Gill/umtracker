@@ -20,12 +20,7 @@ import { NavCourses } from "./nav-courses";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-const data = {
-  user: {
-    name: "username",
-    email: "mail@mail.com",
-    avatar: "/avatar.png",
-  },
+const navData = {
   navMain: [
     {
       title: "Dashboard",
@@ -61,11 +56,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={data.navMain} activeItem={pathname} />
+        <NavMain items={navData.navMain} activeItem={pathname} />
         <NavCourses />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

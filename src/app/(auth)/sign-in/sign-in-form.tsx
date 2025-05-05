@@ -51,14 +51,15 @@ export const SignInForm = () => {
       },
       {
         onRequest: (ctx) => {
-          set;
+          setIsLoading(true);
           //show loading
           toast("Logging into your account...");
         },
         onSuccess: (ctx) => {
           // redirect to the sign in page
           router.push("/");
-          toast("Account created successfully! ");
+          toast("Logged in successfully");
+          setIsLoading(false);
         },
         onError: (ctx) => {
           setIsLoading(false);
