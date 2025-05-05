@@ -114,7 +114,7 @@ export const SignInForm = () => {
           )}
         </Button>
         <div className="flex items-center justify-center w-full text-sm gap-x-2">
-          <p className="text-gray-600">Don't have an account?</p>
+          <p className="text-gray-600">Don&apos;t have an account?</p>
           <Button disabled={isLoading} variant="link" size="sm">
             <Link href="/sign-up" className="hover:underline">
               Sign Up
