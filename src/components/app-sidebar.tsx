@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { LayoutDashboardIcon, ListIcon } from "lucide-react";
+import { LayoutDashboardIcon, ListIcon, Loader2Icon } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -18,14 +18,11 @@ import {
 import Link from "next/link";
 import { NavCourses } from "./nav-courses";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useGetUser } from "@/app/hooks/use-get-user";
 
-const data = {
-  user: {
-    name: "username",
-    email: "mail@mail.com",
-    avatar: "/avatar.png",
-  },
+const navData = {
   navMain: [
     {
       title: "Dashboard",
@@ -61,11 +58,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={data.navMain} activeItem={pathname} />
+        <NavMain items={navData.navMain} activeItem={pathname} />
         <NavCourses />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

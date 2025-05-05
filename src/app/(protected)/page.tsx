@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getUser } from "@/hooks/get-user";
+import { getUser } from "@/app/hooks/get-user";
 
 export default async function Page() {
   const data = await getUser();

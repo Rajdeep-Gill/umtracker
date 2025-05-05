@@ -3,7 +3,7 @@ interface Props {
     courseId: string;
   }>;
 }
-import { getUser } from "@/hooks/get-user";
+import { getUser } from "@/app/hooks/get-user";
 import { redirect } from "next/navigation";
 
 export default async function Page({ params }: Props) {
