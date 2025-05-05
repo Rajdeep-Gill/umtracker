@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { LayoutDashboardIcon, ListIcon, Loader2Icon } from "lucide-react";
+import { LayoutDashboardIcon, ListIcon } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -18,9 +18,7 @@ import {
 import Link from "next/link";
 import { NavCourses } from "./nav-courses";
 import Image from "next/image";
-import { redirect, usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { useGetUser } from "@/app/hooks/use-get-user";
+import { usePathname } from "next/navigation";
 
 const navData = {
   navMain: [

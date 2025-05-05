@@ -25,16 +25,17 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export function NavUser() {
+  const router = useRouter();
   const { isMobile } = useSidebar();
 
   const { data: session, isPending } = authClient.useSession();
 
   const handleLogout = async () => {
     await authClient.signOut();
-    redirect("/");
+    router.push("/");
   };
 
   if (isPending) {
