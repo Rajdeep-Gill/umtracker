@@ -59,7 +59,7 @@ export const SignUpForm = () => {
         onSuccess: () => {
           setIsLoading(false);
           // redirect to the sign in page
-          router.push("/");
+          router.push("/sync"); // Get the user to sync their data
           toast("Account created successfully! ");
         },
         onError: (ctx) => {

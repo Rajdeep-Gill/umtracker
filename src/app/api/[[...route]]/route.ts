@@ -3,6 +3,7 @@ import { handle } from "hono/vercel";
 
 import { auth } from "@/lib/auth";
 import hi from "./hi";
+import sync from "./sync";
 
 export const runtime = "edge";
 
@@ -22,8 +23,10 @@ const authApp = new Hono()
 
 const app = new Hono()
   .basePath("/api")
+  .get("/helloworld", (c) => c.json({ hello: "world" }))
   .route("/hello", hi)
-  .route("/auth", authApp);
+  .route("/auth", authApp)
+  .route("/sync", sync);
 
 export const GET = handle(app);
 export const POST = handle(app);
