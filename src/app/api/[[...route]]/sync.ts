@@ -5,7 +5,6 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { headers } from "next/headers";
 import { zValidator } from "@hono/zod-validator";
-import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
 
 const app = new Hono()
@@ -23,18 +22,16 @@ const app = new Hono()
       .from(sync)
       .where(eq(sync.userId, session.user.id));
 
-    console.log("SERVER - user", data);
-
     if (data.length === 0) {
       // We need to create a new row for said user
-      return c.json({ sync: true }, 200);
+      return c.json({ sync: false }, 200);
     }
 
     // Already have a row for said user
-    return c.json({ sync: false }, 200);
+    return c.json({ sync: true }, 200);
   })
   .post(
-    "/calendar",
+    "/",
     zValidator(
       "json",
       z.object({
@@ -43,7 +40,6 @@ const app = new Hono()
     ),
     async (c) => {
       const values = c.req.valid("json");
-      console.log("SERVER - values", values);
 
       // Check if the user is authenticated
       const session = await auth.api.getSession({
@@ -52,7 +48,6 @@ const app = new Hono()
       if (!session) {
         return c.text("Unauthorized", 401);
       }
-      console.log("SERVER - session", session);
 
       const data = await db
         .insert(sync)
@@ -69,8 +64,6 @@ const app = new Hono()
             updatedAt: new Date(),
           },
         });
-
-      console.log(data);
 
       return c.json({ data }, 200);
     }

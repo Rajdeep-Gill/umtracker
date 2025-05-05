@@ -6,7 +6,7 @@ export const useCheckSync = () => {
     queryKey: ["checkSync"],
     queryFn: async () => {
       // const response = await client.api.sync.$get();
-      const response = await client.api.hello.$get();
+      const response = await client.api.sync.$get();
       console.log(response);
       if (!response.ok) {
         console.error("Failed to fetch sync status", response);

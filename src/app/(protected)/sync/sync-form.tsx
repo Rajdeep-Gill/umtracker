@@ -23,7 +23,8 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { useUpdateSync } from "@/features/sync/use-update-sync";
-import { use } from "react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export const syncFormSchema = z.object({
   url: z
@@ -33,16 +34,8 @@ export const syncFormSchema = z.object({
 });
 
 export const SyncForm = () => {
-  const { data: sync, isLoading, isError } = useCheckSync();
-  console.log("SYNC", sync);
-  console.log("IS LOADING", isLoading);
-  console.log("IS ERROR", isError);
   const router = useRouter();
-  if (!isLoading && sync) {
-    // Already synced, redirect to the home page
-    router.push("/");
-    return null; // Prevent rendering the component
-  }
+  const { data: { sync } = {}, isLoading } = useCheckSync();
 
   const form = useForm<z.infer<typeof syncFormSchema>>({
     resolver: zodResolver(syncFormSchema),
@@ -50,16 +43,33 @@ export const SyncForm = () => {
       url: "",
     },
   });
-
   const mutation = useUpdateSync();
+
+  useEffect(() => {
+    if (!isLoading && sync) {
+      router.push("/");
+    }
+  }, [isLoading, sync, router]);
 
   const onSubmit = (values: z.infer<typeof syncFormSchema>) => {
     console.log("Syncing...");
     console.log(values);
-    mutation(values.url);
+    mutation.mutate(values, {
+      onSuccess: () => {
+        console.log("Sync successful");
+        toast.success("Sync successful");
+        router.push("/");
+      },
+      onError: (error) => {
+        console.error("Sync failed", error);
+        toast.error("Sync failed");
+      },
+    });
   };
 
-  return (
+  return isLoading ? (
+    <SyncFormSkeleton />
+  ) : (
     <div className="max-w-xl mx-auto p-6 space-y-8">
       <div className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight">
@@ -71,9 +81,9 @@ export const SyncForm = () => {
       </div>
 
       <div className="border rounded-lg p-4 bg-muted/50">
+        <p className="text-sm">Sync Status: </p>
         <p className="text-sm">
-          Sync Status:{" "}
-          {isLoading ? "Loading..." : sync ? "Synced" : "Not Synced"}
+          {isLoading ? "Loading..." : sync ? "Already synced" : "Not synced"}
         </p>
       </div>
 
@@ -156,6 +166,41 @@ export const SyncForm = () => {
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>
+      </div>
+    </div>
+  );
+};
+
+const SyncFormSkeleton = () => {
+  return (
+    <div className="max-w-xl mx-auto p-6 space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold tracking-tight">
+          Sync your UM Learn calendar
+        </h1>
+        <p className="text-muted-foreground">
+          Enter your UM Learn calendar URL to sync your schedule
+        </p>
+      </div>
+
+      <div className="border rounded-lg p-4 bg-muted/50">
+        <p className="text-sm">Sync Status: </p>
+        <p className="text-sm">Loading...</p>
+      </div>
+
+      {/* Form skeleton */}
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <div className="h-5 w-24 bg-muted rounded" />
+          <div className="h-10 w-full bg-muted rounded" />
+        </div>
+        <div className="h-10 w-full bg-muted rounded" />
+      </div>
+
+      {/* Tutorial section skeleton */}
+      <div className="space-y-4">
+        <div className="h-6 w-60 bg-muted rounded" />
+        <div className="h-[480px] w-full bg-muted rounded" />
       </div>
     </div>
   );
