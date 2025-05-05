@@ -19,7 +19,6 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { set } from "date-fns";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 
@@ -43,19 +42,19 @@ export const SignInForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { email, password } = values;
-    const { data, error } = await authClient.signIn.email(
+    await authClient.signIn.email(
       {
         email,
         password,
         callbackURL: "/",
       },
       {
-        onRequest: (ctx) => {
+        onRequest: () => {
           setIsLoading(true);
           //show loading
           toast("Logging into your account...");
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           // redirect to the sign in page
           router.push("/");
           toast("Logged in successfully");
@@ -64,7 +63,6 @@ export const SignInForm = () => {
         onError: (ctx) => {
           setIsLoading(false);
           // display the error message
-          alert(ctx.error.message);
           toast(
             "Error creating account. Please try again." + ctx.error.message
           );

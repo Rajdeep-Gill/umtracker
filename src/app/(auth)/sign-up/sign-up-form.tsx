@@ -43,7 +43,7 @@ export const SignUpForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { email, password, name } = values;
-    const { data, error } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         email,
         name,
@@ -51,12 +51,12 @@ export const SignUpForm = () => {
         callbackURL: "/",
       },
       {
-        onRequest: (ctx) => {
+        onRequest: () => {
           //show loading
           setIsLoading(true);
           toast("Creating your account...");
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           setIsLoading(false);
           // redirect to the sign in page
           router.push("/");
