@@ -11,8 +11,10 @@
     "db:migrate": "bun ./scripts/migrate.ts"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.5.0",
     "@hookform/resolvers": "^5.0.1",
     "@neondatabase/serverless": "^1.0.0",
+    "@paralleldrive/cuid2": "^2.2.2",
     "@radix-ui/react-accordion": "^1.2.8",
     "@radix-ui/react-alert-dialog": "^1.1.11",
     "@radix-ui/react-aspect-ratio": "^1.1.4",
