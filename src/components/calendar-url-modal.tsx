@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useUpdateSync } from "@/features/sync/use-update-sync";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface CalendarUrlModalProps {
   open: boolean;
@@ -33,6 +34,7 @@ export function CalendarUrlModal({
   open,
   onOpenChange,
 }: CalendarUrlModalProps) {
+  const [isProcessing, setIsProcessing] = useState(false);
   const form = useForm<z.infer<typeof syncFormSchema>>({
     resolver: zodResolver(syncFormSchema),
     defaultValues: {
@@ -43,14 +45,27 @@ export function CalendarUrlModal({
   const mutation = useUpdateSync();
 
   const onSubmit = (values: z.infer<typeof syncFormSchema>) => {
+    setIsProcessing(true);
     mutation.mutate(values, {
-      onSuccess: () => {
-        toast.success("Calendar URL updated successfully");
+      onSuccess: (data) => {
+        if (typeof data === "object" && "eventsCount" in data) {
+          toast.success(
+            `Calendar updated successfully! Imported ${data.eventsCount} events.`
+          );
+        } else if (typeof data === "object" && "error" in data) {
+          toast.error(data.error || "Failed to update calendar");
+        } else {
+          toast.success("Calendar URL updated successfully");
+        }
         onOpenChange(false);
         form.reset();
+        setIsProcessing(false);
       },
-      onError: () => {
-        toast.error("Failed to update calendar URL");
+      onError: (error) => {
+        toast.error(
+          "Failed to update calendar: " + (error.message || "Unknown error")
+        );
+        setIsProcessing(false);
       },
     });
   };
@@ -77,14 +92,15 @@ export function CalendarUrlModal({
                       type="text"
                       placeholder="https://umlearn.ca/calendar/..."
                       {...field}
+                      disabled={isProcessing}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Update Calendar
+            <Button type="submit" className="w-full" disabled={isProcessing}>
+              {isProcessing ? "Processing..." : "Update Calendar"}
             </Button>
           </form>
         </Form>

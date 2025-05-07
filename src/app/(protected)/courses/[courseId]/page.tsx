@@ -3,8 +3,11 @@ interface Props {
     courseId: string;
   }>;
 }
+
 import { getUser } from "@/app/hooks/get-user";
 import { redirect } from "next/navigation";
+import { AssignmentDetails } from "./assignments-by-course-code";
+import { Badge } from "@/components/ui/badge";
 
 export default async function Page({ params }: Props) {
   const data = await getUser();
@@ -16,8 +19,21 @@ export default async function Page({ params }: Props) {
   const { courseId } = await params;
 
   return (
-    <div className="flex w-full h-[480px] md:h-[600px] lg:h-[800px] px-4 items-center justify-center">
-      <h1 className="text-2xl font-bold">Assignments for: {courseId}</h1>
+    <div className="container py-8 space-y-8 px-8">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold">Course Assignments</h1>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Course Code:</span>
+          <Badge variant="outline" className="text-sm font-medium">
+            {courseId}
+          </Badge>
+        </div>
+      </div>
+      <div className="rounded-lg border bg-card">
+        <div className="p-8 w-full">
+          <AssignmentDetails courseCode={courseId} />
+        </div>
+      </div>
     </div>
   );
 }
