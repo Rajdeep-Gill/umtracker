@@ -2,16 +2,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/hono";
 
-type ResponseType =
-  | {
-      data: any;
-      eventsCount: number;
-    }
-  | {
-      error?: string;
-    }
-  | "Unauthorized";
-
+type ResponseType = InferResponseType<typeof client.api.sync.$post>;
 type RequestType = InferRequestType<typeof client.api.sync.$post>["json"];
 
 export const useUpdateSync = () => {

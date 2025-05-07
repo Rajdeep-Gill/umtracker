@@ -11,7 +11,7 @@ export async function fetchIcsData(url: string) {
     try {
       new URL(url);
     } catch (e) {
-      return { error: "Invalid URL format" };
+      return { error: "Invalid URL format" + e };
     }
 
     // Fetch the ICS file
@@ -27,7 +27,7 @@ export async function fetchIcsData(url: string) {
 
     return icsData;
   } catch (error) {
-    return { error: "Failed to fetch ICS file" };
+    return { error: "Failed to fetch ICS file" + error };
   }
 }
 

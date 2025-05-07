@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, ClockIcon, Check, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ClockIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetEvents } from "@/features/events/use-get-events";
 import { Badge } from "@/components/ui/badge";
@@ -11,18 +11,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "./ui/separator";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover as CommandPopover,
-  PopoverContent as CommandPopoverContent,
-  PopoverTrigger as CommandPopoverTrigger,
-} from "@/components/ui/popover";
 
 type EventType = "Assignment" | "Available" | "Regular";
 
@@ -170,8 +158,14 @@ export const CalendarDisplay = () => {
       {/* Top Bar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h2 className="text-xl font-medium pl-2">
+          <h2 className="text-xl font-medium pl-2 inline-flex">
             {formatMonthYear(currentDate)}
+            {isLoading && (
+              <div className="text-muted-foreground text-sm gap-2 inline-flex items-center">
+                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                Loading events...
+              </div>
+            )}
           </h2>
         </div>
         <div className="flex items-center space-x-2">

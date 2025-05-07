@@ -1,6 +1,6 @@
 "use client";
 
-import { Folder, type LucideIcon } from "lucide-react";
+import { Folder } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupLabel,
