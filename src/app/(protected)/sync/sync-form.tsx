@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { useUpdateSync } from "@/features/sync/use-update-sync";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const syncFormSchema = z.object({
@@ -36,6 +36,7 @@ export const syncFormSchema = z.object({
 export const SyncForm = () => {
   const router = useRouter();
   const { data: { sync } = {}, isLoading } = useCheckSync();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const form = useForm<z.infer<typeof syncFormSchema>>({
     resolver: zodResolver(syncFormSchema),
@@ -52,17 +53,22 @@ export const SyncForm = () => {
   }, [isLoading, sync, router]);
 
   const onSubmit = (values: z.infer<typeof syncFormSchema>) => {
-    console.log("Syncing...");
-    console.log(values);
+    setIsProcessing(true);
     mutation.mutate(values, {
-      onSuccess: () => {
-        console.log("Sync successful");
-        toast.success("Sync successful");
+      onSuccess: (data) => {
+        if (typeof data === "object" && "eventsCount" in data) {
+          toast.success(
+            `Sync successful! Imported ${data.eventsCount} events.`
+          );
+        } else {
+          toast.success("Sync successful!");
+        }
         router.push("/");
       },
       onError: (error) => {
         console.error("Sync failed", error);
-        toast.error("Sync failed");
+        toast.error("Sync failed: " + (error.message || "Unknown error"));
+        setIsProcessing(false);
       },
     });
   };
@@ -100,21 +106,22 @@ export const SyncForm = () => {
                     type="text"
                     placeholder="https://umlearn.ca/calendar/..."
                     {...field}
+                    disabled={isProcessing}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Sync Calendar
+          <Button type="submit" className="w-full" disabled={isProcessing}>
+            {isProcessing ? "Processing..." : "Sync Calendar"}
           </Button>
         </form>
       </Form>
 
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-muted-foreground">
-          Don&abpos;t know where to find the URL?
+          Don&apos;t know where to find the URL?
         </h2>
         <Carousel className="w-full">
           <CarouselContent>

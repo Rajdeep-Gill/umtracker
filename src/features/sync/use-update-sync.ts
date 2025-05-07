@@ -13,7 +13,8 @@ export const useUpdateSync = () => {
       return await response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["checkSync"] });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 
