@@ -13,9 +13,9 @@ export const useCheckSync = () => {
         throw new Error("Failed to fetch sync status");
       }
 
-      // const { sync } = await response.json();
+      const { sync, url } = await response.json();
 
-      return await response.json();
+      return { sync, url };
     },
   });
 

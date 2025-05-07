@@ -6,6 +6,7 @@ import { Hono } from "hono";
 import { headers } from "next/headers";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { fetchIcsData, parseAndStoreEvents } from "@/lib/load-calendar-data";
 
 const app = new Hono()
   .get("/", async (c) => {
@@ -24,11 +25,11 @@ const app = new Hono()
 
     if (data.length === 0) {
       // We need to create a new row for said user
-      return c.json({ sync: false }, 200);
+      return c.json({ sync: false, url: null }, 200);
     }
 
     // Already have a row for said user
-    return c.json({ sync: true }, 200);
+    return c.json({ sync: true, url: data[0].calendarLink }, 200);
   })
   .post(
     "/",
@@ -49,6 +50,7 @@ const app = new Hono()
         return c.text("Unauthorized", 401);
       }
 
+      // Save the calendar URL
       const data = await db
         .insert(sync)
         .values({
@@ -65,7 +67,18 @@ const app = new Hono()
           },
         });
 
-      return c.json({ data }, 200);
+      // Fetch and parse calendar data
+      const icsData = await fetchIcsData(values.url);
+      if (typeof icsData === "string") {
+        // Store the events
+        const result = await parseAndStoreEvents(icsData, session.user.id);
+        if ("error" in result) {
+          return c.json({ error: result.error }, 400);
+        }
+        return c.json({ data, eventsCount: result.count }, 200);
+      } else {
+        return c.json({ error: icsData.error }, 400);
+      }
     }
   );
 

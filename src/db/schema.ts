@@ -61,3 +61,19 @@ export const sync = pgTable("sync", {
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });
+
+// Calendar events table -> Stores parsed calendar events
+export const calendarEvents = pgTable("calendar_events", {
+  id: text("id").primaryKey().notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  endTime: timestamp("end_time").notNull(),
+  courseCode: text("course_code"),
+  courseName: text("course_name"),
+  eventType: text("event_type").notNull(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
