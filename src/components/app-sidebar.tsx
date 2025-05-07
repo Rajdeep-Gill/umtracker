@@ -20,7 +20,7 @@ import { NavCourses } from "./nav-courses";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
-import { use, useState } from "react";
+import { useState } from "react";
 import { useCheckSync } from "@/features/sync/use-check-sync";
 import { useUpdateSync } from "@/features/sync/use-update-sync";
 import { toast } from "sonner";
