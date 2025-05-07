@@ -6,7 +6,7 @@ interface Props {
 
 import { getUser } from "@/app/hooks/get-user";
 import { redirect } from "next/navigation";
-import { AssignmentDetails } from "./assignments-by-course-code";
+import { AssignmentDetails } from "./assignment-card";
 import { Badge } from "@/components/ui/badge";
 
 export default async function Page({ params }: Props) {
@@ -19,7 +19,7 @@ export default async function Page({ params }: Props) {
   const { courseId } = await params;
 
   return (
-    <div className="container py-8 space-y-8 px-8">
+    <div className="py-8 space-y-8 px-8">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold">Course Assignments</h1>
         <div className="flex items-center gap-2">
