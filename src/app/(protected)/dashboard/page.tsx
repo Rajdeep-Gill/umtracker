@@ -10,7 +10,7 @@ export default async function Page() {
     redirect("/sign-in");
   }
   return (
-    <div className="flex w-full h-[calc(100vh-8rem)] px-4 items-center justify-center">
+    <div className="flex w-full md:h-[calc(100vh-8rem)] px-4 items-center justify-center">
       <CalendarDisplay />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, ClockIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetEvents } from "@/features/events/use-get-events";
@@ -12,30 +12,16 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "./ui/separator";
 import { MobileCalendarDisplay } from "./mobile-calendar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type EventType = "Assignment" | "Available" | "Regular";
 
 export const CalendarDisplay = () => {
-  const [isMobile, setIsMobile] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEventTypes, setSelectedEventTypes] = useState<EventType[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const { data: eventsData, isLoading } = useGetEvents();
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Check initially
-    checkMobile();
-
-    // Add event listener
-    window.addEventListener("resize", checkMobile);
-
-    // Cleanup
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const isMobile = useIsMobile();
 
   if (isMobile) {
     return <MobileCalendarDisplay />;

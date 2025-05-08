@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, ClockIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, ClockIcon, ListIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import { Separator } from "./ui/separator";
 import { useGetEvents } from "@/features/events/use-get-events";
 
@@ -100,7 +103,7 @@ export const MobileCalendarDisplay = () => {
   };
 
   return (
-    <div className="flex w-full flex-col space-y-4 rounded-lg border bg-background p-4">
+    <div className="flex w-full flex-col space-y-4 rounded-lg border bg-background p-4 h-full">
       {/* Top Bar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -129,9 +132,9 @@ export const MobileCalendarDisplay = () => {
         {weekDates.map((date) => {
           const dayEvents = getEventsForDate(date);
           return (
-            <Popover key={date.toISOString()}>
-              <PopoverTrigger asChild>
-                <div className="border rounded-lg p-3">
+            <Dialog key={date.toISOString()}>
+              <DialogTrigger asChild>
+                <div className="border rounded-lg p-3 hover:bg-accent/50 transition-colors h-[116px]">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span
@@ -201,78 +204,78 @@ export const MobileCalendarDisplay = () => {
                     )}
                   </div>
                 </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-96">
-                <div className="space-y-3">
-                  <h4 className="font-medium">
-                    {date.toLocaleDateString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </h4>
-                  <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                    <Separator />
-                    {dayEvents.length === 0 && (
-                      <div className="text-muted-foreground text-md">
-                        No events for this day
-                      </div>
-                    )}
-                    {dayEvents.map((event) => (
-                      <div
-                        key={event.id}
-                        className="p-4 rounded-lg border"
-                        style={{
-                          backgroundColor: event.courseCode
-                            ? `${getCourseColor(event.courseCode)}5`
-                            : "#00000005",
-                          borderColor: event.courseCode
-                            ? `${getCourseColor(event.courseCode)}30`
-                            : "#00000030",
-                        }}
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          {event.courseCode && (
-                            <Badge
-                              style={{
-                                backgroundColor: getCourseColor(
-                                  event.courseCode
-                                ),
-                              }}
-                            >
-                              {event.courseCode}
-                            </Badge>
-                          )}
-                          <span className="text-sm font-medium break-words">
-                            {event.title}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm font-medium text-primary mb-2">
-                          <ClockIcon className="w-4 h-4" />
-                          {new Date(event.endTime).toLocaleTimeString("en-US", {
-                            hour: "numeric",
-                            minute: "numeric",
-                          })}
-                        </div>
-                        {event.description && (
-                          <p className="text-sm text-muted-foreground break-words">
-                            {event.description}
-                          </p>
+              </DialogTrigger>
+              <DialogContent className="w-[90vw] max-w-[400px]">
+                <DialogTitle>
+                  {date.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </DialogTitle>
+                <DialogDescription>{dayEvents.length} events</DialogDescription>
+                <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                  <Separator />
+                  {dayEvents.length === 0 && (
+                    <div className="text-muted-foreground text-md">
+                      No events for this day
+                    </div>
+                  )}
+                  {dayEvents.map((event) => (
+                    <div
+                      key={event.id}
+                      className="p-4 rounded-lg border"
+                      style={{
+                        backgroundColor: event.courseCode
+                          ? `${getCourseColor(event.courseCode)}5`
+                          : "#00000005",
+                        borderColor: event.courseCode
+                          ? `${getCourseColor(event.courseCode)}30`
+                          : "#00000030",
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        {event.courseCode && (
+                          <Badge
+                            style={{
+                              backgroundColor: getCourseColor(event.courseCode),
+                            }}
+                          >
+                            {event.courseCode}
+                          </Badge>
                         )}
+                        <span className="text-sm font-medium break-words">
+                          {event.title}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex items-center gap-2 text-sm font-medium text-primary mb-2">
+                        <ClockIcon className="w-4 h-4" />
+                        {new Date(event.endTime).toLocaleTimeString("en-US", {
+                          hour: "numeric",
+                          minute: "numeric",
+                        })}
+                      </div>
+                      {event.description && (
+                        <p className="text-sm text-muted-foreground break-words">
+                          {event.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </PopoverContent>
-            </Popover>
+              </DialogContent>
+            </Dialog>
           );
         })}
       </div>
 
       {/* Filters */}
       <div className="space-y-4">
-        <div>Filter By:</div>
+        <div className="text-sm font-medium flex items-center gap-2">
+          <ListIcon className="w-4 h-4" />
+          Filter By
+        </div>
         {/* Event Type Filter */}
         <div className="flex flex-col gap-2">
           <div className="text-sm font-medium">Event Type</div>

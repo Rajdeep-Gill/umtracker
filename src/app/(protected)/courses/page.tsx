@@ -1,5 +1,6 @@
 import { getUser } from "@/app/hooks/get-user";
 import { redirect } from "next/navigation";
+import { CourseDashboard } from "./course-dashboard";
 
 export default async function Page() {
   const data = await getUser();
@@ -7,10 +8,7 @@ export default async function Page() {
   if (!data) {
     redirect("/sign-in");
   }
+
   // TODO: Fetch all courses and add a button to redirect to each course page
-  return (
-    <div className="flex w-full h-[480px] md:h-[600px] lg:h-[800px] px-4 items-center justify-center">
-      COURSE PAGE!
-    </div>
-  );
+  return <CourseDashboard />;
 }

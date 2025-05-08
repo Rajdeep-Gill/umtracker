@@ -19,7 +19,7 @@ export default async function Page({ params }: Props) {
   const { courseId } = await params;
 
   return (
-    <div className="py-8 space-y-8 px-8">
+    <div className="py-2 md:py-8 space-y-8 px-2 md:px-8">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold">Course Assignments</h1>
         <div className="flex items-center gap-2">
@@ -30,7 +30,7 @@ export default async function Page({ params }: Props) {
         </div>
       </div>
       <div className="rounded-lg border bg-card">
-        <div className="p-8 w-full">
+        <div className="p-2 md:p-8 w-full">
           <AssignmentDetails courseCode={courseId} />
         </div>
       </div>
